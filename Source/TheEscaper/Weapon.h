@@ -22,10 +22,41 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	virtual void OnAquired(class USkeletalMeshComponent* OwnerMesh);
 
+	void Attack();
+
+	UFUNCTION(BlueprintPure, Category = "Animation")
+	void GetAnims(UAnimSequence*& Idle, UAnimSequence*& Walk, UAnimMontage*& Attack) const;
+
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+	virtual void AttackPointAnimNotify();
+
+protected:
+	UPROPERTY(VisibleDefaultsOnly, Category = "Weapon")
+	class UStaticMeshComponent* WeaponMesh;
 private:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Weapon")
 	class USceneComponent* RootComp;
-	UPROPERTY(VisibleDefaultsOnly, Category = "Weapon")
-	class UStaticMeshComponent* WeaponMesh;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Animation")
+	UAnimSequence* IdleAnim;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Animation")
+	UAnimSequence* WalkAnim;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Animation")
+	UAnimMontage* AttackMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	FName WeaponSocket;
+
+	USkeletalMeshComponent* OwnerSkeletalMesh;
+
+	bool CanAttack();
+	
+	UPROPERTY(EditDefaultsOnly, Category = "weapon")
+	float firingRate = 1.f;
+
+	FTimerHandle FiringTimmer;
 };

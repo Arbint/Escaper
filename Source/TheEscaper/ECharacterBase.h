@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "ECharacterBase.generated.h"
 
+class AWeapon;
+
 UCLASS()
 class THEESCAPER_API AECharacterBase : public ACharacter
 {
@@ -23,12 +25,37 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintCallable, Category = "weapon")
+	void GiveWeapon(TSubclassOf<AWeapon> weaponClass);
+
+	UFUNCTION(BlueprintCallable, Category = "weapon")
+	FORCEINLINE	AWeapon* GetCurrentWeapon() const { return currentWeapon; }
+
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 protected:
 	void Attack();
 
+	void PrevWeapon();
+
+	void NextWeapon();
+
+private:
 	UPROPERTY(EditDefaultsOnly, Category = "Animation")
-	UAnimMontage* AttackMontage;
+	UAnimMontage* WeaponSwitchMontage;
+	FTimerHandle WeaponSwitchingHandle;
+	void WeaponSwitchTimePoint();
+	
+	UPROPERTY()
+	TArray<AWeapon*> weapons;
+
+	AWeapon* currentWeapon;
+
+	int weaponIndex = -1;
+
+	bool HasWeaponOfType(TSubclassOf<AWeapon> weaponClass) const;
+
+	void EquipWeapon(int index);
+
 };

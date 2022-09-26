@@ -2,7 +2,15 @@
 
 
 #include "Door.h"
+#include "Components/BoxComponent.h"
 
+#define ECC_Character ECC_GameTraceChannel1
+
+ADoor::ADoor()
+{
+	GetTriggerBox()->SetCollisionResponseToAllChannels(ECR_Ignore);
+	GetTriggerBox()->SetCollisionResponseToChannel(ECC_Character, ECR_Overlap);
+}
 void ADoor::OnTriggered(AActor* actor)
 {
 	ActorsInTrigger++;
