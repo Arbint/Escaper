@@ -4,6 +4,7 @@
 #include "EPlayerController.h"
 #include "PlayerCharacter.h"
 #include "InGameUI.h"
+#include "HealthComponent.h"
 void AEPlayerController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
@@ -11,6 +12,7 @@ void AEPlayerController::OnPossess(APawn* InPawn)
 	if (playerCharacter)
 	{
 		playerCharacter->OnWeaponSwitched.AddDynamic(this, &AEPlayerController::PawnWeaponSwitched);
+		playerCharacter->GetHealthComponent()->OnHealthChanged.AddDynamic(this, &AEPlayerController::HealthChanged);
 	}
 }
 
@@ -25,6 +27,14 @@ void AEPlayerController::PawnWeaponSwitched(AWeapon* weapon)
 	if (inGameUI)
 	{
 		inGameUI->WeaponEquiped(weapon);
+	}
+}
+
+void AEPlayerController::HealthChanged(float newVal, float delta, float maxHealth)
+{
+	if (inGameUI)
+	{
+		inGameUI->HealthUpdated(newVal, delta, maxHealth);
 	}
 }
 

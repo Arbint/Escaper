@@ -15,8 +15,12 @@ class THEESCAPER_API UInGameUI : public UUserWidget
 	GENERATED_BODY()
 public:
 	void WeaponEquiped(class AWeapon* weapon);
+	void HealthUpdated(float newValue, float delta, float maxHealth);
 
 private:
 	UPROPERTY(meta = (BindWidget))
 	class UImage* CrossHair;
+
+	UPROPERTY(meta = (BindWidget))
+	class UValueGauge* HealthBar;
 };

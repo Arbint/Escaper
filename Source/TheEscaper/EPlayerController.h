@@ -28,6 +28,8 @@ private:
 
 	UFUNCTION()
 	void PawnWeaponSwitched(class AWeapon* weapon);
+	UFUNCTION()
+	void HealthChanged(float newVal, float delta, float maxHealth);
 
 	void SpawnUI();
 };
