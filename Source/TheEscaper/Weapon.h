@@ -32,6 +32,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	virtual void AttackPointAnimNotify();
 
+	FORCEINLINE UTexture2D* GetAimTexture() const { return AimImage; }
+
 protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Weapon")
 	class UStaticMeshComponent* WeaponMesh;
@@ -50,6 +52,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 	FName WeaponSocket;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	UTexture2D* AimImage;
 
 	USkeletalMeshComponent* OwnerSkeletalMesh;
 

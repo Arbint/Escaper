@@ -119,4 +119,6 @@ void AECharacterBase::WeaponSwitchTimePoint()
 	}
 	currentWeapon = weapons[weaponIndex];
 	currentWeapon->SetActorHiddenInGame(false);
+	OnWeaponSwitched.Broadcast(currentWeapon);
 }
+

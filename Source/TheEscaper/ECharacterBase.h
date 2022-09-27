@@ -8,6 +8,8 @@
 
 class AWeapon;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWeaponSwtiched, AWeapon*, weapon);
+
 UCLASS()
 class THEESCAPER_API AECharacterBase : public ACharacter
 {
@@ -16,7 +18,7 @@ class THEESCAPER_API AECharacterBase : public ACharacter
 public:
 	// Sets default values for this character's properties
 	AECharacterBase();
-
+	FOnWeaponSwtiched OnWeaponSwitched;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -48,7 +50,7 @@ private:
 	UAnimMontage* WeaponSwitchMontage;
 	FTimerHandle WeaponSwitchingHandle;
 	void WeaponSwitchTimePoint();
-	
+
 	UPROPERTY()
 	TArray<AWeapon*> weapons;
 
