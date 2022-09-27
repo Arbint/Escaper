@@ -3,6 +3,7 @@
 
 #include "ECharacterBase.h"
 #include "Components/CapsuleComponent.h"
+#include "HealthComponent.h"
 #include "Weapon.h"
 
 #define ECC_Character ECC_GameTraceChannel1
@@ -12,6 +13,7 @@ AECharacterBase::AECharacterBase()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	GetCapsuleComponent()->SetCollisionObjectType(ECC_Character);
+	HealthComp = CreateDefaultSubobject<UHealthComponent>("HealthComp");
 }
 
 // Called when the game starts or when spawned

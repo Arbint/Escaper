@@ -31,6 +31,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "weapon")
 	FORCEINLINE	AWeapon* GetCurrentWeapon() const { return currentWeapon; }
 
+	FORCEINLINE class UHealthComponent* GetHealthComponent() const { return HealthComp; }
+
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
@@ -58,4 +60,6 @@ private:
 
 	void EquipWeapon(int index);
 
+	UPROPERTY(VisibleAnywhere, Category = "Health")
+	class UHealthComponent* HealthComp;
 };
