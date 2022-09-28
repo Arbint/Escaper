@@ -4,6 +4,7 @@
 #include "ECharacterBase.h"
 #include "Components/CapsuleComponent.h"
 #include "Weapon.h"
+#include "HealthComponent.h"
 
 #define ECC_Character ECC_GameTraceChannel1
 // Sets default values
@@ -12,6 +13,9 @@ AECharacterBase::AECharacterBase()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	GetCapsuleComponent()->SetCollisionObjectType(ECC_Character);
+	healthComp = CreateDefaultSubobject<UHealthComponent>("healthComp");
+	healthComp->OnHealthChanged.AddDynamic(this, &AECharacterBase::HealthChanged);
+	healthComp->OnHealthEmpty.AddDynamic(this, &AECharacterBase::StartDeathSequence);
 }
 
 // Called when the game starts or when spawned
@@ -107,6 +111,46 @@ void AECharacterBase::EquipWeapon(int index)
 	weaponIndex = index;
 	GetWorldTimerManager().SetTimer(WeaponSwitchingHandle, this, &AECharacterBase::WeaponSwitchTimePoint, SwitchDuration/2, false);
 	
+}
+
+void AECharacterBase::HealthChanged(float val, float delta, float maxVal)
+{
+	OnHealthChange(val, delta, maxVal);
+}
+
+void AECharacterBase::StartDeathSequence()
+{
+	if (!bIsDead)
+	{
+		bIsDead = true;
+		OnDeathStarted();
+		DisableGameplayRelavency();
+		for (auto weapon : weapons)
+		{
+			weapon->Destroy();
+		}
+
+		if (DeathMontage)
+		{
+			float deathAnimDuration = GetMesh()->GetAnimInstance()->Montage_Play(DeathMontage);
+			GetWorldTimerManager().SetTimer(DeathTimerHandle, this, &AECharacterBase::Dead, deathAnimDuration + 1, false);
+		}
+	}
+}
+
+void AECharacterBase::OnHealthChange(float val, float delta, float maxVal) { }
+
+void AECharacterBase::OnDeathStarted() { }
+
+void AECharacterBase::Dead()
+{
+	Destroy();
+}
+
+void AECharacterBase::DisableGameplayRelavency()
+{
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void AECharacterBase::WeaponSwitchTimePoint()
