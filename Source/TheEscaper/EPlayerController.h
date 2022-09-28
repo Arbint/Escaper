@@ -16,13 +16,20 @@ class THEESCAPER_API AEPlayerController : public APlayerController
 	GENERATED_BODY()
 	
 public:
-	virtual void OnPossess(APawn* InPawn);
+	AEPlayerController();
+	virtual void OnPossess(APawn* InPawn) override;
 	virtual void BeginPlay() override;
+
+	UFUNCTION(BlueprintCallable)
+	void TestDead();
 private:
 	class APlayerCharacter* playerCharacter;
 
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<class UInGameUI> InGameUIClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Death")
+	TSubclassOf<class APawn> DeathPawnClass;
 
 	UInGameUI* inGameUI;
 
@@ -30,6 +37,9 @@ private:
 	void PawnWeaponSwitched(class AWeapon* weapon);
 	UFUNCTION()
 	void HealthChanged(float newVal, float delta, float maxHealth);
+
+	UFUNCTION()
+	void PawnDead();
 
 	void SpawnUI();
 };

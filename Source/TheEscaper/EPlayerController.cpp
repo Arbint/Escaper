@@ -5,14 +5,26 @@
 #include "PlayerCharacter.h"
 #include "InGameUI.h"
 #include "HealthComponent.h"
+AEPlayerController::AEPlayerController()
+{
+	bAutoManageActiveCameraTarget = false;
+}
+
 void AEPlayerController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
+	
 	playerCharacter = Cast<APlayerCharacter>(InPawn);
 	if (playerCharacter)
 	{
+		SetViewTargetWithBlend(InPawn);
 		playerCharacter->OnWeaponSwitched.AddDynamic(this, &AEPlayerController::PawnWeaponSwitched);
 		playerCharacter->GetHealthComponent()->OnHealthChanged.AddDynamic(this, &AEPlayerController::HealthChanged);
+		playerCharacter->GetHealthComponent()->OnHealthEmpty.AddDynamic(this, &AEPlayerController::PawnDead);
+	}
+	else
+	{
+		SetViewTargetWithBlend(InPawn, 1.f, EViewTargetBlendFunction::VTBlend_EaseInOut, 1);
 	}
 }
 
@@ -20,6 +32,11 @@ void AEPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 	SpawnUI();
+}
+
+void AEPlayerController::TestDead()
+{
+	PawnDead();
 }
 
 void AEPlayerController::PawnWeaponSwitched(AWeapon* weapon)
@@ -35,6 +52,20 @@ void AEPlayerController::HealthChanged(float newVal, float delta, float maxHealt
 	if (inGameUI)
 	{
 		inGameUI->HealthUpdated(newVal, delta, maxHealth);
+	}
+}
+
+void AEPlayerController::PawnDead()
+{
+	SetInputMode(FInputModeUIOnly());
+	playerCharacter->SetActorHiddenInGame(true);
+	if (DeathPawnClass)
+	{
+		APawn* deathPawn = GetWorld()->SpawnActor<APawn>(DeathPawnClass, playerCharacter->GetActorTransform());
+		if (deathPawn)
+		{
+			Possess(deathPawn);
+		}
 	}
 }
 

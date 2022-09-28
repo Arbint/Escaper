@@ -19,6 +19,7 @@ public:
 	// Sets default values for this character's properties
 	AECharacterBase();
 	FOnWeaponSwtiched OnWeaponSwitched;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -64,4 +65,23 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Health")
 	class UHealthComponent* HealthComp;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Animation")
+	UAnimMontage* HitMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Animation")
+	UAnimMontage* DeathMontage;
+
+	FTimerHandle DealthTimmerHandle;
+
+	UFUNCTION()
+	void HealthChanged(float newVal, float delta, float maxHealth);
+	UFUNCTION()
+	void StartDeathSequence();
+
+	virtual void OnHealthChanged(float newVal, float delta, float maxHealth);
+	virtual void OnDeathStarted();
+	void Dead();
+
+	void DisableGameplayRelavency();
 };
