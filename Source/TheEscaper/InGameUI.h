@@ -17,7 +17,19 @@ public:
 	UFUNCTION()
 	void UpdateHealth(float health, float delta, float maxHealth);
 
+	UFUNCTION()
+	void NewWeaponGiven(class AWeapon* weapon);
+
+	UFUNCTION()
+	void WeaponSwitched(class AWeapon* weapon);
+
 private:
 	UPROPERTY(meta = (BindWidget))
 	class UValueGauge* healthBar;
+
+	UPROPERTY(meta = (BindWidget))
+	class UImage* crossHair;
+
+	UPROPERTY(meta = (BindWidget))
+	class UListView* weaponList;
 };

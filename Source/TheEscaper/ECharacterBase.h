@@ -6,7 +6,11 @@
 #include "GameFramework/Character.h"
 #include "ECharacterBase.generated.h"
 
+
 class AWeapon;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWeaponGiven, AWeapon*, weapon);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWeaponSwitched, AWeapon*, weapon);
 
 UCLASS()
 class THEESCAPER_API AECharacterBase : public ACharacter
@@ -22,6 +26,9 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
+	FOnWeaponGiven OnWeaponGiven;
+	FOnWeaponSwitched OnWeaponSwitched;
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -41,6 +48,9 @@ protected:
 	void PrevWeapon();
 
 	void NextWeapon();
+	
+	UFUNCTION()
+	void Reload();
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Animation")

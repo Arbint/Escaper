@@ -47,6 +47,20 @@ void AWeapon::Attack()
 	}
 }
 
+void AWeapon::Reload()
+{
+}
+
+void AWeapon::PutInInventory()
+{
+	SetActorHiddenInGame(true);
+}
+
+void AWeapon::PutInHand()
+{
+	SetActorHiddenInGame(false);
+}
+
 void AWeapon::GetAnims(UAnimSequence*& Idle, UAnimSequence*& Walk, UAnimMontage*& Attack) const
 {
 	Idle = IdleAnim;
@@ -56,10 +70,14 @@ void AWeapon::GetAnims(UAnimSequence*& Idle, UAnimSequence*& Walk, UAnimMontage*
 
 void AWeapon::AttackPointAnimNotify()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Committing attack"));
 }
 
-bool AWeapon::CanAttack()
+bool AWeapon::GetAmmoStatus(int& clipAmmo, int& inventoryAmmo) const
+{
+	return false;
+}
+
+bool AWeapon::CanAttack() const
 {
 	return !GetWorldTimerManager().IsTimerActive(FiringTimmer);
 }
