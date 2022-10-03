@@ -6,10 +6,12 @@
 #include "GameFramework/Actor.h"
 #include "Weapon.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAmmoUpdated, int, clipAmmo, int, inventoryAmmo);
+
 UCLASS()
 class THEESCAPER_API AWeapon : public AActor
 {
-	GENERATED_BODY()
+	GENERATED_BODY() 
 	
 public:	
 	// Sets default values for this actor's properties
@@ -29,12 +31,34 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Animation")
 	void GetAnims(UAnimSequence*& Idle, UAnimSequence*& Walk, UAnimMontage*& Attack) const;
 
+	FORCEINLINE UTexture2D* GetCrossHairTexture() const { return crossHairTexture; }
+	FORCEINLINE UTexture2D* GetWeaponIcon() const { return weaponIcon; }
+	
+	/*
+	get the amount of ammo
+	@ return - false if not ammo based
+	*/
+	virtual bool GetAmmoStatus(int& OutAmmoInClip, int& OutAmmoInInventory) const;
+
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	virtual void AttackPointAnimNotify();
+
+	virtual void Reload();
+
+	virtual void BackToInventory();
+	
+	virtual void PutInHand();
+
+	FOnAmmoUpdated OnAmmoUpdated;
 
 protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Weapon")
 	class UStaticMeshComponent* WeaponMesh;
+	virtual bool CanAttack() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+	FORCEINLINE USkeletalMeshComponent* GetOwnerSkeletalMesh() const { return OwnerSkeletalMesh; }
+
 private:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Weapon")
 	class USceneComponent* RootComp;
@@ -51,12 +75,18 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 	FName WeaponSocket;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	UTexture2D* crossHairTexture;
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	UTexture2D* weaponIcon;
+
 	USkeletalMeshComponent* OwnerSkeletalMesh;
 
-	bool CanAttack();
-	
 	UPROPERTY(EditDefaultsOnly, Category = "weapon")
 	float firingRate = 1.f;
 
 	FTimerHandle FiringTimmer;
+
+	virtual void OnBackToInventory();
+	virtual void OnPutInHand();
 };

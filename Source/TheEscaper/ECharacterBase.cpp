@@ -41,7 +41,7 @@ void AECharacterBase::GiveWeapon(TSubclassOf<AWeapon> weaponClass)
 	newWeapon->SetOwner(this);
 	newWeapon->OnAquired(GetMesh());
 	weapons.Add(newWeapon);
-
+	OnGiveWeapon.Broadcast(newWeapon);
 	if (currentWeapon == nullptr)
 	{
 		EquipWeapon(weapons.Num() - 1);
@@ -86,6 +86,12 @@ void AECharacterBase::NextWeapon()
 		nextIndex = 0;
 	}
 	EquipWeapon(nextIndex);
+}
+
+void AECharacterBase::Reload()
+{
+	if(currentWeapon)
+		currentWeapon->Reload();
 }
 
 bool AECharacterBase::HasWeaponOfType(TSubclassOf<AWeapon> weaponClass) const
@@ -157,8 +163,9 @@ void AECharacterBase::WeaponSwitchTimePoint()
 {
 	if (currentWeapon)
 	{
-		currentWeapon->SetActorHiddenInGame(true);
+		currentWeapon->BackToInventory();
 	}
 	currentWeapon = weapons[weaponIndex];
-	currentWeapon->SetActorHiddenInGame(false);
+	currentWeapon->PutInHand();
+	OnWeaponSwitchedTo.Broadcast(currentWeapon);
 }

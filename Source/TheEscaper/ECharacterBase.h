@@ -8,6 +8,9 @@
 
 class AWeapon;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGiveWeapon, AWeapon*, newWeapon);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWeaponSwitchedTo, AWeapon*, newWeapon);
+
 UCLASS()
 class THEESCAPER_API AECharacterBase : public ACharacter
 {
@@ -35,12 +38,17 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	FOnGiveWeapon OnGiveWeapon;
+	FOnWeaponSwitchedTo OnWeaponSwitchedTo;
 protected:
+	UFUNCTION(BlueprintCallable, Category = "Attack")
 	void Attack();
 
 	void PrevWeapon();
 
 	void NextWeapon();
+
+	void Reload();
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Animation")

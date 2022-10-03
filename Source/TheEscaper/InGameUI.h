@@ -16,8 +16,20 @@ class THEESCAPER_API UInGameUI : public UUserWidget
 public:
 	UFUNCTION()
 	void UpdateHealth(float health, float delta, float maxHealth);
+	
+	UFUNCTION()
+	void NewWeaponAquired(class AWeapon* newWeapon);
+
+	UFUNCTION()
+	void WeaponSwitchedTo(class AWeapon* weapon);
 
 private:
 	UPROPERTY(meta = (BindWidget))
 	class UValueGauge* healthBar;
+
+	UPROPERTY(meta = (BindWidget))
+	class UImage* crossHair;
+
+	UPROPERTY(meta = (BindWidget))
+	class UListView* WeaponList;
 };

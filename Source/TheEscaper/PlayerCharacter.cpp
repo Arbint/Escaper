@@ -22,6 +22,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &APlayerCharacter::Attack);
 	PlayerInputComponent->BindAction("nextWeapon", IE_Pressed, this, &APlayerCharacter::NextWeapon);
 	PlayerInputComponent->BindAction("prevWeapon", IE_Pressed, this, &APlayerCharacter::PrevWeapon);
+	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &APlayerCharacter::Reload);
 }
 
 void APlayerCharacter::BeginPlay()
@@ -49,4 +50,3 @@ void APlayerCharacter::LookUp(float amt)
 {
 	AddControllerPitchInput(amt);
 }
-
