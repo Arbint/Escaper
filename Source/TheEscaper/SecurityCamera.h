@@ -25,6 +25,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintCallable, Category = "Cam")
+	FORCEINLINE	USpotLightComponent* GetRefLight() const { return sightRef; }
+
 private:
 	UPROPERTY(VisibleAnywhere, Category = "AIPerception")
 	class UAIPerceptionComponent* PerceptionComp;
