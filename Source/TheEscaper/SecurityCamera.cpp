@@ -9,6 +9,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/Character.h"
 #include "EPlayerController.h"
+#include "HealthComponent.h"
 // Sets default values
 ASecurityCamera::ASecurityCamera()
 {
@@ -33,6 +34,9 @@ ASecurityCamera::ASecurityCamera()
 		PerceptionComp->OnTargetPerceptionUpdated.AddDynamic(this, &ASecurityCamera::AIPerceptionUpdated);
 		PerceptionComp->ConfigureSense(*sightConfig);
 	}
+
+	healthComp = CreateDefaultSubobject<UHealthComponent>("HealthComp");
+	healthComp->OnHealthEmpty.AddDynamic(this, &ASecurityCamera::Die);
 }
 
 // Called when the game starts or when spawned
@@ -45,7 +49,6 @@ void ASecurityCamera::BeginPlay()
 		sightConfig->SightRadius = sightRef->AttenuationRadius;
 		sightConfig->LoseSightRadius = sightRef->AttenuationRadius;
 		sightConfig->PeripheralVisionAngleDegrees = sightRef->OuterConeAngle;
-		UE_LOG(LogTemp, Warning, TEXT("Configuring Sight"));
 		PerceptionComp->ConfigureSense(*sightConfig);
 	}
 
@@ -65,11 +68,6 @@ void ASecurityCamera::Tick(float DeltaTime)
 	float currentYaw = RotationPivot->GetRelativeRotation().Yaw;
 	float goalYaw = currentYaw + yawDir * yawSpeed * DeltaTime;
 	RotationPivot->SetRelativeRotation(FRotator(0,goalYaw,0));
-
-	if (sightConfig)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Configuring Sight"));
-	}
 }
 
 void ASecurityCamera::ReverseDir()
@@ -99,4 +97,11 @@ void ASecurityCamera::GetActorEyesViewPoint(FVector& OutLocation, FRotator& OutR
 {
 	OutLocation = sightRef->GetComponentLocation();
 	OutRotation = sightRef->GetComponentRotation();
+}
+
+void ASecurityCamera::Die()
+{
+	yawDir = 0.f;
+	PerceptionComp->SetActive(false);
+	BP_Die();
 }

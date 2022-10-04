@@ -19,7 +19,8 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "Die"))
+	void BP_Die();
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -64,5 +65,12 @@ private:
 	FLinearColor NeutralColor;
 	UPROPERTY(EditDefaultsOnly, Category = "AIPerceptionVisual")
 	FLinearColor DetectedColor;
+
+	UPROPERTY()
+	class UHealthComponent* healthComp;
+
+	UFUNCTION()
+	void Die();
+
 
 };
