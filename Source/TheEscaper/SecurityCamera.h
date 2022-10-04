@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Perception/AIPerceptionComponent.h"
 #include "SecurityCamera.generated.h"
 
 UCLASS()
-class THEESCAPER_API ASecurityCamera : public AActor
+class THEESCAPER_API ASecurityCamera : public APawn
 {
 	GENERATED_BODY()
 	
@@ -32,9 +33,31 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "AIPerception")
 	class USceneComponent* RootComp;
+	
+	UPROPERTY(VisibleAnywhere, Category = "AIPerception")
+	class USceneComponent* RotationPivot;
+
 	UPROPERTY(VisibleAnywhere, Category = "AIPerception")
 	class USpotLightComponent* sightRef;
 
+	UPROPERTY(EditAnywhere, Category = "Rotation")
+	float yawSpeed = 5.f;
+
+	UPROPERTY(EditAnywhere, Category = "Rotation")
+	float pauseTime = 1.f;
+	
+	UPROPERTY(EditAnywhere, Category = "Rotation")
+	float yawHalfRange = 30.f;
+
+	float yawDir;
+
+	FTimerHandle yawTimerHandle;
+	float RotationDuration;
+	void ReverseDir();
+
 	UFUNCTION()
-	void PerceptionUpdated(AActor* Actor, FAIStimulus Stimulus);
+	void AIPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus);
+
+	virtual void GetActorEyesViewPoint(FVector& OutLocation, FRotator& OutRotation) const override;
+
 };
