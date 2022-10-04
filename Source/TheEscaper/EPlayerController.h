@@ -16,7 +16,9 @@ class THEESCAPER_API AEPlayerController : public APlayerController
 
 public:
 	AEPlayerController();
+	virtual void BeginPlay() override;
 	virtual void OnPossess(APawn* newPawn) override;
+	void Caught();
 
 private:
 	class APlayerCharacter* playerCharacter;
@@ -29,4 +31,5 @@ private:
 	void PawnDead();
 
 	UInGameUI* inGameUI;
+	void GameOver();
 };

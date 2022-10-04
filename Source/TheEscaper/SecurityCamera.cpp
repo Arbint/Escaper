@@ -8,6 +8,7 @@
 #include "Components/SceneComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/Character.h"
+#include "EPlayerController.h"
 // Sets default values
 ASecurityCamera::ASecurityCamera()
 {
@@ -38,6 +39,7 @@ ASecurityCamera::ASecurityCamera()
 void ASecurityCamera::BeginPlay()
 {
 	Super::BeginPlay();
+	sightRef->SetLightColor(NeutralColor);
 	if (sightConfig && PerceptionComp && sightRef)
 	{
 		sightConfig->SightRadius = sightRef->AttenuationRadius;
@@ -71,15 +73,18 @@ void ASecurityCamera::ReverseDir()
 
 void ASecurityCamera::AIPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
-	if (Cast<ACharacter>(Actor) == UGameplayStatics::GetPlayerCharacter(this, 0))
+	AEPlayerController* playerController = Cast<AEPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+	if (Actor->GetOwner() == playerController)
 	{
 		if (Stimulus.WasSuccessfullySensed())
 		{
-			sightRef->SetLightColor(FLinearColor(1, 0, 0 ,1));
+			sightRef->SetLightColor(DetectedColor);
+			yawDir = 0.f;
+			playerController->Caught();
 		}
 		else
 		{
-			sightRef->SetLightColor(FLinearColor(0, 1, 0, 1));
+			sightRef->SetLightColor(NeutralColor);
 		}
 	}
 }

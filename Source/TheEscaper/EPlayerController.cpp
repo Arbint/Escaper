@@ -11,6 +11,11 @@ AEPlayerController::AEPlayerController()
 	bAutoManageActiveCameraTarget = false;
 }
 
+void AEPlayerController::BeginPlay()
+{
+	Super::BeginPlay();
+}
+
 void AEPlayerController::OnPossess(APawn* newPawn)
 {
 	Super::OnPossess(newPawn);
@@ -35,10 +40,27 @@ void AEPlayerController::OnPossess(APawn* newPawn)
 	}
 }
 
+void AEPlayerController::Caught()
+{
+	if (playerCharacter)
+	{
+		float duration = playerCharacter->Caught();
+		FTimerHandle caughtTimmerHandle;
+		GetWorldTimerManager().SetTimer(caughtTimmerHandle, this, &AEPlayerController::GameOver, duration, false);
+		SetInputMode(FInputModeUIOnly());
+	}
+}
+
 void AEPlayerController::PawnDead()
 {
 	playerCharacter->SetActorHiddenInGame(true);
 	SetInputMode(FInputModeUIOnly());
 	APawn* DeathPawn = GetWorld()->SpawnActor<APawn>(DeathPawnClass, playerCharacter->GetTransform());
 	Possess(DeathPawn);
+	playerCharacter = nullptr;
+}
+
+void AEPlayerController::GameOver()
+{
+	inGameUI->ShowGameOverScreen();
 }

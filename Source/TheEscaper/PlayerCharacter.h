@@ -21,6 +21,8 @@ public:
 
 	virtual void BeginPlay() override;
 
+	float Caught();
+
 private:
 	void MoveForward(float amt);
 	void MoveRight(float amt);
@@ -29,4 +31,7 @@ private:
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "player")
 	class UCameraComponent* playerEye;
+
+	UPROPERTY(EditDefaultsOnly, Category = "player")
+	UAnimMontage* CaughtMontage;
 };

@@ -3,6 +3,7 @@
 
 #include "PlayerCharacter.h"
 #include "Camera/CameraComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 APlayerCharacter::APlayerCharacter()
 {
@@ -29,6 +30,12 @@ void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	GetMesh()->AttachToComponent(playerEye, FAttachmentTransformRules::KeepWorldTransform);
+}
+
+float APlayerCharacter::Caught()
+{
+	GetCharacterMovement()->MaxWalkSpeed = 0.f;
+	return GetMesh()->GetAnimInstance()->Montage_Play(CaughtMontage);
 }
 
 void APlayerCharacter::MoveForward(float amt)

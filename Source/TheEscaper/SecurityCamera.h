@@ -60,4 +60,9 @@ private:
 
 	virtual void GetActorEyesViewPoint(FVector& OutLocation, FRotator& OutRotation) const override;
 
+	UPROPERTY(EditDefaultsOnly, Category = "AIPerceptionVisual")
+	FLinearColor NeutralColor;
+	UPROPERTY(EditDefaultsOnly, Category = "AIPerceptionVisual")
+	FLinearColor DetectedColor;
+
 };
