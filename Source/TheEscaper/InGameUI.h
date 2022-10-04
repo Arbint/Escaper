@@ -68,4 +68,6 @@ private:
 		void Quit();
 
 	void ParentMenuPanelTo(UCanvasPanel* newParent);
+
+	class AEGameMode* gameMode;
 };

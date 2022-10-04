@@ -10,6 +10,9 @@
 #include "Components/CanvasPanel.h"
 #include "Components/Button.h"
 #include "Components/CanvasPanelSlot.h"
+#include "EGameMode.h"
+#include "Kismet/GameplayStatics.h"
+#include "kismet/KismetSystemLibrary.h"
 
 void UInGameUI::UpdateHealth(float health, float delta, float maxHealth)
 {
@@ -39,7 +42,7 @@ void UInGameUI::WeaponSwitchedTo(AWeapon* weapon)
 
 void UInGameUI::ShowGameOverScreen()
 {
-	GetOwningPlayer()->bShowMouseCursor = true;
+	GetOwningPlayer()->SetShowMouseCursor(true);
 	UISwicher->SetActiveWidget(GameOverRoot);
 	ParentMenuPanelTo(GameOverRoot);
 	ResumeBtn->SetVisibility(ESlateVisibility::Hidden);
@@ -51,6 +54,7 @@ void UInGameUI::NativeConstruct()
 	ResumeBtn->OnReleased.AddDynamic(this, &UInGameUI::Resume);
 	QuitBtn->OnReleased.AddDynamic(this, &UInGameUI::Quit);
 	RestartBtn->OnReleased.AddDynamic(this, &UInGameUI::ReStart);
+	gameMode = Cast<AEGameMode>(UGameplayStatics::GetGameMode(this));
 }
 
 void UInGameUI::Resume()
@@ -60,12 +64,18 @@ void UInGameUI::Resume()
 
 void UInGameUI::ReStart()
 {
-
+	if (gameMode)
+	{
+		gameMode->RestartCurrentLevel();
+	}
 }
 
 void UInGameUI::Quit()
 {
-
+	if (gameMode)
+	{
+		gameMode->QuitGame(GetOwningPlayer());
+	}
 }
 
 void UInGameUI::ParentMenuPanelTo(UCanvasPanel* newParent)

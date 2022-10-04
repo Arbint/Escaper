@@ -30,8 +30,8 @@ ASecurityCamera::ASecurityCamera()
 		sightConfig->DetectionByAffiliation.bDetectEnemies = true;
 		sightConfig->DetectionByAffiliation.bDetectFriendlies = true;
 		sightConfig->DetectionByAffiliation.bDetectNeutrals = true;
-		PerceptionComp->ConfigureSense(*sightConfig);
 		PerceptionComp->OnTargetPerceptionUpdated.AddDynamic(this, &ASecurityCamera::AIPerceptionUpdated);
+		PerceptionComp->ConfigureSense(*sightConfig);
 	}
 }
 
@@ -45,6 +45,7 @@ void ASecurityCamera::BeginPlay()
 		sightConfig->SightRadius = sightRef->AttenuationRadius;
 		sightConfig->LoseSightRadius = sightRef->AttenuationRadius;
 		sightConfig->PeripheralVisionAngleDegrees = sightRef->OuterConeAngle;
+		UE_LOG(LogTemp, Warning, TEXT("Configuring Sight"));
 		PerceptionComp->ConfigureSense(*sightConfig);
 	}
 
@@ -64,6 +65,11 @@ void ASecurityCamera::Tick(float DeltaTime)
 	float currentYaw = RotationPivot->GetRelativeRotation().Yaw;
 	float goalYaw = currentYaw + yawDir * yawSpeed * DeltaTime;
 	RotationPivot->SetRelativeRotation(FRotator(0,goalYaw,0));
+
+	if (sightConfig)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Configuring Sight"));
+	}
 }
 
 void ASecurityCamera::ReverseDir()

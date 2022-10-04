@@ -33,6 +33,8 @@ void AEPlayerController::OnPossess(APawn* newPawn)
 			playerCharacter->OnGiveWeapon.AddDynamic(inGameUI, &UInGameUI::NewWeaponAquired);
 			playerCharacter->OnWeaponSwitchedTo.AddDynamic(inGameUI, &UInGameUI::WeaponSwitchedTo);
 		}
+		SetInputMode(FInputModeGameOnly());
+		SetShowMouseCursor(false);
 	}
 	else
 	{
