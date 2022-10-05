@@ -27,6 +27,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Cam")
 	FORCEINLINE	USpotLightComponent* GetRefLight() const { return sightRef; }
+	UFUNCTION(BlueprintCallable, Category = "Cam")
+	FORCEINLINE	USceneComponent* GetPitchPivot() const { return RotationPitchPivot; }
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = "AIPerception")
@@ -39,7 +41,10 @@ private:
 	class USceneComponent* RootComp;
 	
 	UPROPERTY(VisibleAnywhere, Category = "AIPerception")
-	class USceneComponent* RotationPivot;
+	class USceneComponent* RotationYawPivot;	
+	
+	UPROPERTY(VisibleAnywhere, Category = "AIPerception")
+	class USceneComponent* RotationPitchPivot;
 
 	UPROPERTY(VisibleAnywhere, Category = "AIPerception")
 	class USpotLightComponent* sightRef;
@@ -69,11 +74,11 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "AIPerceptionVisual")
 	FLinearColor DetectedColor;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, Category = "Health")
 	class UHealthComponent* healthComp;
 
 	UFUNCTION()
 	void Die();
 
-
+	bool dead;
 };

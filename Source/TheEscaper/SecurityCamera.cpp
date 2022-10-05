@@ -18,11 +18,14 @@ ASecurityCamera::ASecurityCamera()
 	RootComp = CreateDefaultSubobject<USceneComponent>("RootComp");
 	SetRootComponent(RootComp);
 
-	RotationPivot = CreateDefaultSubobject<USceneComponent>("RotationPivot");
-	RotationPivot->SetupAttachment(RootComp);
+	RotationYawPivot = CreateDefaultSubobject<USceneComponent>("RotationYawPivot");
+	RotationYawPivot->SetupAttachment(RootComp);
 	
+	RotationPitchPivot = CreateDefaultSubobject<USceneComponent>("RotationPitchPivot");
+	RotationPitchPivot->SetupAttachment(RotationYawPivot);
+
 	sightRef = CreateDefaultSubobject<USpotLightComponent>("SigthRef");
-	sightRef->SetupAttachment(RotationPivot);
+	sightRef->SetupAttachment(RotationPitchPivot);
 
 	PerceptionComp = CreateDefaultSubobject<UAIPerceptionComponent>("PercpetionComp");
 	sightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>("SightConfig");
@@ -55,7 +58,7 @@ void ASecurityCamera::BeginPlay()
 	RotationDuration = yawHalfRange / yawSpeed * 2.f;
 	
 	yawDir = 1;
-	RotationPivot->SetRelativeRotation(FRotator(0, -yawDir * yawHalfRange, 0));
+	RotationYawPivot->SetRelativeRotation(FRotator(0, -yawDir * yawHalfRange, 0));
 
 	GetWorldTimerManager().SetTimer(yawTimerHandle, this, &ASecurityCamera::ReverseDir, RotationDuration, true);
 }
@@ -65,9 +68,9 @@ void ASecurityCamera::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	float currentYaw = RotationPivot->GetRelativeRotation().Yaw;
+	float currentYaw = RotationYawPivot->GetRelativeRotation().Yaw;
 	float goalYaw = currentYaw + yawDir * yawSpeed * DeltaTime;
-	RotationPivot->SetRelativeRotation(FRotator(0,goalYaw,0));
+	RotationYawPivot->SetRelativeRotation(FRotator(0,goalYaw,0));
 }
 
 void ASecurityCamera::ReverseDir()
@@ -101,7 +104,11 @@ void ASecurityCamera::GetActorEyesViewPoint(FVector& OutLocation, FRotator& OutR
 
 void ASecurityCamera::Die()
 {
-	yawDir = 0.f;
-	PerceptionComp->SetActive(false);
-	BP_Die();
+	if (!dead)
+	{
+		dead = true;
+		yawDir = 0.f;
+		PerceptionComp->SetSenseEnabled(UAISense_Sight::StaticClass(), false);
+		BP_Die();
+	}
 }
