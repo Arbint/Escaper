@@ -3,7 +3,7 @@
 
 #include "PlayerCharacter.h"
 #include "Camera/CameraComponent.h"
-
+#include "GameFramework/CharacterMovementComponent.h"
 APlayerCharacter::APlayerCharacter()
 {
 	playerEye = CreateDefaultSubobject<UCameraComponent>("playerEye");
@@ -51,3 +51,8 @@ void APlayerCharacter::LookUp(float amt)
 	AddControllerPitchInput(amt);
 }
 
+float APlayerCharacter::Caught()
+{
+	GetCharacterMovement()->MaxWalkSpeed = 0;
+	return GetMesh()->GetAnimInstance()->Montage_Play(CaughtMontage);
+}

@@ -18,6 +18,8 @@ public:
 	AEPlayerController();
 	virtual void OnPossess(APawn* newPawn) override;
 
+	void Caught();
+
 private:
 	class APlayerCharacter* playerCharacter;
 	UPROPERTY(EditDefaultsOnly, Category = "Player")
@@ -29,4 +31,7 @@ private:
 	void PawnDead();
 
 	UInGameUI* inGameUI;
+	FTimerHandle CaughtTimerHandle;
+	void CaughtFinished();
+	bool bIsCaught;
 };

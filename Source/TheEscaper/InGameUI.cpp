@@ -31,3 +31,8 @@ void UInGameUI::WeaponSwitched(AWeapon* weapon)
 	}
 	weaponList->SetSelectedItem(weapon);
 }
+
+void UInGameUI::SwitchToGameOverMenu()
+{
+
+}

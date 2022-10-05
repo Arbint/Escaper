@@ -18,8 +18,10 @@ public:
 	// Sets default values for this component's properties
 	UHealthComponent();
 
+	UPROPERTY(BlueprintAssignable, Category = "Health")
 	FOnHealthChanged OnHealthChanged;
-	
+
+	UPROPERTY(BlueprintAssignable, Category = "Health")
 	FOnHealthEmpty OnHealthEmpty;
 
 protected:

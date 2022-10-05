@@ -42,3 +42,20 @@ void AEPlayerController::PawnDead()
 	APawn* DeathPawn = GetWorld()->SpawnActor<APawn>(DeathPawnClass, playerCharacter->GetTransform());
 	Possess(DeathPawn);
 }
+
+void AEPlayerController::CaughtFinished()
+{
+	inGameUI->SwitchToGameOverMenu();
+}
+
+void AEPlayerController::Caught()
+{
+	if (bIsCaught)
+		return;
+
+	bIsCaught = true;
+	float caugthAnimationDuration = playerCharacter->Caught();
+	SetInputMode(FInputModeUIOnly());
+	GetWorldTimerManager().SetTimer(CaughtTimerHandle, this, &AEPlayerController::CaughtFinished, caugthAnimationDuration, false);
+}
+
