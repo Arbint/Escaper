@@ -9,7 +9,7 @@ AEEnemy::AEEnemy()
 {
 	HealthBarWidgetComp = CreateDefaultSubobject<UWidgetComponent>("HealthBarComp");
 	HealthBarWidgetComp->SetupAttachment(GetRootComponent());
-	
+
 }
 
 void AEEnemy::BeginPlay()
@@ -25,3 +25,4 @@ void AEEnemy::OnHealthChange(float val, float delta, float maxVal)
 		valueGauge->SetValue(val, delta, maxVal);
 	}
 }
+

@@ -22,4 +22,6 @@ private:
 
 	class UValueGauge* valueGauge;
 	virtual void OnHealthChange(float val, float delta, float maxVal) override;
+
+
 };
