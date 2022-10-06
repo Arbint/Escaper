@@ -23,5 +23,6 @@ private:
 	class UValueGauge* valueGauge;
 	virtual void OnHealthChange(float val, float delta, float maxVal) override;
 
-
+	UPROPERTY(EditAnywhere, Category = "Patrolling")
+		class UPatrollingComponent* patrollingComp;
 };
