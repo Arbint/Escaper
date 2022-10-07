@@ -44,5 +44,6 @@ void AEAIControllerBase::PerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 	else
 	{
 		GetBlackboardComponent()->ClearValue(TargetBBName);
+		GetBlackboardComponent()->SetValueAsVector(LastSeenBBName, Actor->GetActorLocation());
 	}
 }

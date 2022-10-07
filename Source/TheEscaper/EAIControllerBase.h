@@ -30,6 +30,10 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Perception")
 	FName TargetBBName;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Perception")
+	FName LastSeenBBName;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Perception")
 	class UBehaviorTree* BehaviorTree;
 };
