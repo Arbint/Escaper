@@ -8,12 +8,18 @@
 #include "Kismet/GameplayStatics.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Perception/AISenseConfig_Damage.h"
+
 
 AEAIControllerBase::AEAIControllerBase()
 {
 	PerceptionComp = CreateDefaultSubobject<UAIPerceptionComponent>("PerceptionComp");
+	
 	SightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>("SightConfig");
-	if (SightConfig && PerceptionComp)
+
+	DamageConfig = CreateDefaultSubobject<UAISenseConfig_Damage>("DamageConfig");
+
+	if (SightConfig && PerceptionComp && DamageConfig)
 	{
 		SightConfig->DetectionByAffiliation.bDetectEnemies = true;
 		SightConfig->DetectionByAffiliation.bDetectFriendlies = true;
@@ -22,6 +28,10 @@ AEAIControllerBase::AEAIControllerBase()
 		SightConfig->LoseSightRadius = 1200.f;
 		SightConfig->PeripheralVisionAngleDegrees = 45.f;
 		PerceptionComp->ConfigureSense(*SightConfig);
+		
+		DamageConfig->SetMaxAge(DamageMaxAge);
+		PerceptionComp->ConfigureSense(*DamageConfig);
+		
 		PerceptionComp->OnTargetPerceptionUpdated.AddDynamic(this, &AEAIControllerBase::PerceptionUpdated);
 	}
 }
@@ -43,7 +53,12 @@ void AEAIControllerBase::PerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 	}
 	else
 	{
-		GetBlackboardComponent()->ClearValue(TargetBBName);
-		GetBlackboardComponent()->SetValueAsVector(LastSeenBBName, Actor->GetActorLocation());
+		TArray<AActor*> PerceivedActors;
+		PerceptionComp->GetCurrentlyPerceivedActors(UAISense::StaticClass(), PerceivedActors);
+		if (!PerceivedActors.Contains(Actor))
+		{
+			GetBlackboardComponent()->ClearValue(TargetBBName);
+			GetBlackboardComponent()->SetValueAsVector(LastSeenBBName, Actor->GetActorLocation());
+		}
 	}
 }

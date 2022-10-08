@@ -25,6 +25,9 @@ private:
 	UPROPERTY()
 	class UAISenseConfig_Sight* SightConfig;
 
+	UPROPERTY()
+	class UAISenseConfig_Damage* DamageConfig;
+
 	UFUNCTION()
 	void PerceptionUpdated(AActor* Actor, FAIStimulus Stimulus);
 
@@ -33,6 +36,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Perception")
 	FName LastSeenBBName;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Perception")
+	float DamageMaxAge = 2.f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Perception")
 	class UBehaviorTree* BehaviorTree;
