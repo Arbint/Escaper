@@ -24,14 +24,14 @@ AEAIControllerBase::AEAIControllerBase()
 		SightConfig->DetectionByAffiliation.bDetectEnemies = true;
 		SightConfig->DetectionByAffiliation.bDetectFriendlies = true;
 		SightConfig->DetectionByAffiliation.bDetectNeutrals = true;
-		SightConfig->SightRadius = 1000.f;
-		SightConfig->LoseSightRadius = 1200.f;
+		SightConfig->SightRadius = 5200.f;
+		SightConfig->LoseSightRadius = 5200.f;
 		SightConfig->PeripheralVisionAngleDegrees = 45.f;
 		PerceptionComp->ConfigureSense(*SightConfig);
 		
 		DamageConfig->SetMaxAge(DamageMaxAge);
 		PerceptionComp->ConfigureSense(*DamageConfig);
-		
+		PerceptionComp->SetDominantSense(UAISense_Sight::StaticClass());
 		PerceptionComp->OnTargetPerceptionUpdated.AddDynamic(this, &AEAIControllerBase::PerceptionUpdated);
 	}
 }
@@ -49,16 +49,26 @@ void AEAIControllerBase::PerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 
 	if (Stimulus.WasSuccessfullySensed())
 	{
+		if (UAIPerceptionSystem::GetSenseClassForStimulus(this, Stimulus) == UAISense_Sight::StaticClass())
+		{
+			//UE_LOG(LogTemp, Warning, TEXT("seeing target: %s"), *Actor->GetName())
+		}
+		else
+		{
+			//UE_LOG(LogTemp, Warning, TEXT("hurt by target: %s"), *Actor->GetName())
+		}
+
 		GetBlackboardComponent()->SetValueAsObject(TargetBBName, Actor);
 	}
 	else
 	{
-		TArray<AActor*> PerceivedActors;
-		PerceptionComp->GetCurrentlyPerceivedActors(UAISense::StaticClass(), PerceivedActors);
-		if (!PerceivedActors.Contains(Actor))
+		const FActorPerceptionInfo* info = PerceptionComp->GetActorInfo(*Actor);
+		if (!info->HasAnyCurrentStimulus())
 		{
+			//UE_LOG(LogTemp, Warning, TEXT("Losing perception"))
 			GetBlackboardComponent()->ClearValue(TargetBBName);
 			GetBlackboardComponent()->SetValueAsVector(LastSeenBBName, Actor->GetActorLocation());
 		}
+		
 	}
 }
