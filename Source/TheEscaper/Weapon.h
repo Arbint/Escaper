@@ -41,7 +41,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	FORCEINLINE USkeletalMeshComponent* GetOwnerSkeletalMesh() const { return OwnerSkeletalMesh; }
-
+	FORCEINLINE class UStaticMesh* GetWeaponMesh() const { return WeaponMesh->GetStaticMesh(); }
 	FORCEINLINE UTexture2D* GetCrossHairTexture() const { return crossHairTexture; }
 	FORCEINLINE UTexture2D* GetWeaponIcon() const { return weaponIconTexture; }
 
@@ -50,6 +50,8 @@ public:
 	*/
 	virtual bool GetAmmoStatus(int& clipAmmo, int& inventoryAmmo) const;
 
+	void ReplenishAmmoFrom(AWeapon* replenishFrom);
+	virtual void ReplenishAmmo(int amt);
 protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Weapon")
 	class UStaticMeshComponent* WeaponMesh;

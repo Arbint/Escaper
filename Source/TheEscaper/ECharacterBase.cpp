@@ -5,6 +5,8 @@
 #include "Components/CapsuleComponent.h"
 #include "Weapon.h"
 #include "HealthComponent.h"
+#include "AIController.h"
+#include "BrainComponent.h"
 
 #define ECC_Character ECC_GameTraceChannel1
 // Sets default values
@@ -32,9 +34,10 @@ void AECharacterBase::Tick(float DeltaTime)
 
 void AECharacterBase::GiveWeapon(TSubclassOf<AWeapon> weaponClass)
 {
-	if (HasWeaponOfType(weaponClass))
+	AWeapon* weapon = HasWeaponOfType(weaponClass);
+	if (weapon)
 	{
-		//TODO: maybe add ammo here
+		weapon->ReplenishAmmoFrom(weaponClass.GetDefaultObject());
 		return;
 	}
 	AWeapon* newWeapon = GetWorld()->SpawnActor<AWeapon>(weaponClass);
@@ -96,16 +99,16 @@ void AECharacterBase::Reload()
 	}
 }
 
-bool AECharacterBase::HasWeaponOfType(TSubclassOf<AWeapon> weaponClass) const
+AWeapon* AECharacterBase::HasWeaponOfType(TSubclassOf<AWeapon> weaponClass) const
 {
 	for (AWeapon* weapon : weapons)
 	{
 		if (weapon->GetClass() == weaponClass)
 		{
-			return true;
+			return weapon;
 		}
 	}
-	return false;
+	return nullptr;
 }
 
 void AECharacterBase::EquipWeapon(int index)
@@ -152,13 +155,24 @@ void AECharacterBase::OnDeathStarted() { }
 
 void AECharacterBase::Dead()
 {
+	OnDead();
 	Destroy();
+}
+
+void AECharacterBase::OnDead()
+{
+
 }
 
 void AECharacterBase::DisableGameplayRelavency()
 {
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	AAIController* AIC = GetController<AAIController>();
+	if (AIC)
+	{
+		AIC->GetBrainComponent()->StopLogic("Dead");
+	}
 }
 
 void AECharacterBase::WeaponSwitchTimePoint()

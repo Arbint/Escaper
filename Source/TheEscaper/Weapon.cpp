@@ -77,6 +77,20 @@ bool AWeapon::GetAmmoStatus(int& clipAmmo, int& inventoryAmmo) const
 	return false;
 }
 
+void AWeapon::ReplenishAmmoFrom(AWeapon* replenishFrom)
+{
+	int clipAmmoFound, InventoryAmmoFound;
+	if (replenishFrom->GetAmmoStatus(clipAmmoFound, InventoryAmmoFound))
+	{
+		ReplenishAmmo(clipAmmoFound + InventoryAmmoFound);
+	}
+}
+
+void AWeapon::ReplenishAmmo(int amt)
+{
+
+}
+
 bool AWeapon::CanAttack() const
 {
 	return !GetWorldTimerManager().IsTimerActive(FiringTimmer);

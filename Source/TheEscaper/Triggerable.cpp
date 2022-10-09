@@ -16,6 +16,7 @@ ATriggerable::ATriggerable()
 	TriggerComp->SetupAttachment(rootComp);
 	TriggerComp->OnComponentBeginOverlap.AddDynamic(this, &ATriggerable::Overlapped);
 	TriggerComp->OnComponentEndOverlap.AddDynamic(this, &ATriggerable::OverlapEnded);
+	
 }
 
 // Called when the game starts or when spawned

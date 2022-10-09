@@ -17,6 +17,9 @@ public:
 	AEEnemy();
 	virtual void BeginPlay() override;
 private:
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	TArray<TSubclassOf<class AWeapon>> RandomWeapons;
+
 	UPROPERTY(VisibleDefaultsOnly, Category = "UI")
 	class UWidgetComponent* HealthBarWidgetComp;
 
@@ -24,5 +27,10 @@ private:
 	virtual void OnHealthChange(float val, float delta, float maxVal) override;
 
 	UPROPERTY(EditAnywhere, Category = "Patrolling")
-		class UPatrollingComponent* patrollingComp;
+	class UPatrollingComponent* patrollingComp;
+
+	UPROPERTY(EditAnywhere, Category = "Weapon")
+	TSubclassOf<class AWeaponPickup> weaponPickupClass;
+
+	virtual void OnDead() override;
 };

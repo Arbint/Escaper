@@ -63,8 +63,10 @@ private:
 	AWeapon* currentWeapon;
 
 	int weaponIndex = -1;
-
-	bool HasWeaponOfType(TSubclassOf<AWeapon> weaponClass) const;
+	/*
+		@ return - returns the weapon found of the type weaponClass, null if don't have weapon of type
+	*/
+	AWeapon* HasWeaponOfType(TSubclassOf<AWeapon> weaponClass) const;
 
 	void EquipWeapon(int index);
 
@@ -83,6 +85,7 @@ private:
 	virtual void OnDeathStarted();
 
 	void Dead();
+	virtual void OnDead();
 	FTimerHandle DeathTimerHandle;
 	bool bIsDead;
 

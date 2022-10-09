@@ -65,6 +65,13 @@ bool AGun::GetAmmoStatus(int& clipAmmo, int& inventoryAmmo) const
 	return true;
 }
 
+void AGun::ReplenishAmmo(int ammo)
+{
+	Super::ReplenishAmmo(ammo);
+	ammoInInventory += ammo;
+	OnAmmoUpdated.Broadcast(ammoInClip, ammoInInventory);
+}
+
 bool AGun::CanAttack() const
 {
 	if (IsReloading() || ammoInClip == 0) return false;
