@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "GenericTeamAgentInterface.h"
 #include "ECharacterBase.generated.h"
 
 
@@ -13,13 +14,15 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWeaponGiven, AWeapon*, weapon);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWeaponSwitched, AWeapon*, weapon);
 
 UCLASS()
-class THEESCAPER_API AECharacterBase : public ACharacter
+class THEESCAPER_API AECharacterBase : public ACharacter, public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this character's properties
 	AECharacterBase();
+	/** Retrieve team identifier in form of FGenericTeamId */
+	virtual FGenericTeamId GetGenericTeamId() const override {return TeamID;}
 
 protected:
 	// Called when the game starts or when spawned
@@ -41,10 +44,9 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-protected:
 	void Attack();
 
+protected:
 	void PrevWeapon();
 
 	void NextWeapon();
@@ -53,6 +55,9 @@ protected:
 	void Reload();
 
 private:
+	UPROPERTY(EditDefaultsOnly, Category = "Team")
+	FGenericTeamId TeamID;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Animation")
 	UAnimMontage* WeaponSwitchMontage;
 	FTimerHandle WeaponSwitchingHandle;

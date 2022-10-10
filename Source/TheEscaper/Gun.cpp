@@ -3,7 +3,7 @@
 
 #include "Gun.h"
 #include "kismet/GameplayStatics.h"
-
+#include "Perception/AISense_Damage.h"
 void AGun::AttackPointAnimNotify()
 {
 	Super::AttackPointAnimNotify();
@@ -15,6 +15,7 @@ void AGun::AttackPointAnimNotify()
 	if (GetWorld()->LineTraceSingleByChannel(result, Start, ownerViewLoc + ownerViewRot.Vector() * shootRange, ECC_Camera))
 	{
 		UGameplayStatics::ApplyDamage(result.GetActor(), damage, nullptr, GetOwner(), nullptr);
+		UAISense_Damage::ReportDamageEvent(this, result.GetActor(), GetOwner(), damage, GetActorLocation(), result.ImpactPoint);
 		BP_OnBulletHit(result);
 	}
 

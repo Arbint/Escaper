@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "ECharacterBase.h"
+
 #include "PlayerCharacter.generated.h"
 
 /**
@@ -37,4 +38,6 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "player")
 	UAnimMontage* CaughtMontage;
+
+
 };
