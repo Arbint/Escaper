@@ -33,8 +33,11 @@ void AEAIControllerBase::OnPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus
 	}
 	else
 	{
-		GetBlackboardComponent()->ClearValue(TargetBlackboardKeyName);
-		//do not clear the value if there is still another sense sensing the target
-		//if ai lose track of you, ai goes to the last place it sees you first, wait for 2 seconds, and then if still not seeing you, go back to patrolling.
+		const FActorPerceptionInfo* perceptionInfo = PerceptionComp->GetActorInfo(*Actor);
+		if (!perceptionInfo->HasAnyCurrentStimulus())
+		{
+			GetBlackboardComponent()->ClearValue(TargetBlackboardKeyName);
+			GetBlackboardComponent()->SetValueAsVector(CheckLocBlackboardKeyName, Actor->GetActorLocation());
+		}
 	}
 }

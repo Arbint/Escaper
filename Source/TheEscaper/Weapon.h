@@ -55,6 +55,7 @@ protected:
 	class UStaticMeshComponent* WeaponMesh;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Animation")
+	TMap<USkeletalMesh*, UAnimMontage*> ReloadMontages;
 	UAnimMontage* ReloadMontage;
 
 	virtual bool CanAttack() const;
@@ -63,14 +64,17 @@ private:
 	class USceneComponent* RootComp;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Animation")
+	TMap<USkeletalMesh*, UAnimSequence*> IdleAnims;
 	UAnimSequence* IdleAnim;
-
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Animation")
+	TMap<USkeletalMesh*, UAnimSequence*> WalkAnims;
 	UAnimSequence* WalkAnim;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Animation")
+	TMap<USkeletalMesh*, UAnimMontage*> AttackMontages;
 	UAnimMontage* AttackMontage;
-
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 	UTexture2D* crossHairTexture;
 	

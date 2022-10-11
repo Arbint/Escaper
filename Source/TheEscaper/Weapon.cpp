@@ -36,6 +36,21 @@ void AWeapon::OnAquired(class USkeletalMeshComponent* OwnerMesh)
 	OwnerSkeletalMesh = OwnerMesh;
 	SetActorHiddenInGame(true);
 	AttachToComponent(OwnerSkeletalMesh, FAttachmentTransformRules::SnapToTargetIncludingScale, WeaponSocket);
+
+	USkeletalMesh* Mesh = OwnerMesh->SkeletalMesh;
+	IdleAnim = WalkAnim = nullptr;
+	AttackMontage = ReloadMontage = nullptr;
+	if (IdleAnims.Contains(Mesh))
+		IdleAnim = IdleAnims[Mesh];
+
+	if (WalkAnims.Contains(Mesh))
+		WalkAnim = WalkAnims[Mesh];
+
+	if (AttackMontages.Contains(Mesh))
+		AttackMontage = AttackMontages[Mesh];
+
+	if (ReloadMontages.Contains(Mesh))
+		ReloadMontage = ReloadMontages[Mesh];
 }
 
 void AWeapon::Attack()

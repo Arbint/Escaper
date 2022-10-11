@@ -33,6 +33,8 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	FName TargetBlackboardKeyName;
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+	FName CheckLocBlackboardKeyName;
 
 	UPROPERTY(EditAnywhere, Category = "AI")
 	UBehaviorTree* BehaviorTree;
