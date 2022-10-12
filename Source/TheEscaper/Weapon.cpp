@@ -36,6 +36,24 @@ void AWeapon::OnAquired(class USkeletalMeshComponent* OwnerMesh)
 	OwnerSkeletalMesh = OwnerMesh;
 	SetActorHiddenInGame(true);
 	AttachToComponent(OwnerSkeletalMesh, FAttachmentTransformRules::SnapToTargetIncludingScale, WeaponSocket);
+
+	//update the animations based on the mesh
+	USkeletalMesh* mesh = OwnerMesh->SkeletalMesh;
+
+	AttackMontage = ReloadMontage = nullptr;
+	IdleAnim = WalkAnim = nullptr;
+	
+	if (AttackMontageMap.Contains(mesh))
+		AttackMontage = AttackMontageMap[mesh];
+
+	if (ReoloadMontageMap.Contains(mesh))
+		ReloadMontage = ReoloadMontageMap[mesh];
+
+	if (IdleAnimMap.Contains(mesh))
+		IdleAnim = IdleAnimMap[mesh];
+
+	if (WalkAnimMap.Contains(mesh))
+		WalkAnim = WalkAnimMap[mesh];
 }
 
 void AWeapon::Attack()
