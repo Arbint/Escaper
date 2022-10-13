@@ -14,17 +14,12 @@ void AGun::AttackPointAnimNotify()
 	FVector Start = WeaponMesh->GetSocketLocation(MuzzleSocketName);
 	if (GetWorld()->LineTraceSingleByChannel(result, Start, ownerViewLoc + ownerViewRot.Vector() * shootRange, ECC_Camera))
 	{
-		UGameplayStatics::ApplyDamage(result.GetActor(), damage, nullptr, GetOwner(), nullptr);
-		UAISense_Damage::ReportDamageEvent(this, result.GetActor(), GetOwner(), damage, GetActorLocation(), result.ImpactPoint);
+		UGameplayStatics::ApplyDamage(result.GetActor(), GetWeaponDamage(), nullptr, GetOwner(), nullptr);
+		UAISense_Damage::ReportDamageEvent(this, result.GetActor(), GetOwner(), GetWeaponDamage(), GetActorLocation(), result.ImpactPoint);
 		BP_OnBulletHit(result);
 	}
 
-	ammoInClip--;
-	OnAmmoUpdated.Broadcast(ammoInClip, ammoInInventory);
-	if (ammoInClip == 0)
-	{
-		Reload();
-	}
+	UpdateAmmo();
 }
 
 void AGun::Reload()
@@ -64,6 +59,16 @@ bool AGun::GetAmmoStatus(int& clipAmmo, int& inventoryAmmo) const
 	clipAmmo = ammoInClip;
 	inventoryAmmo = ammoInInventory;
 	return true;
+}
+
+void AGun::UpdateAmmo()
+{
+	ammoInClip--;
+	OnAmmoUpdated.Broadcast(ammoInClip, ammoInInventory);
+	if (ammoInClip == 0)
+	{
+		Reload();
+	}
 }
 
 bool AGun::CanAttack() const

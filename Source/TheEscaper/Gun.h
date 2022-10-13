@@ -17,6 +17,9 @@ class THEESCAPER_API AGun : public AWeapon
 protected:
 	UFUNCTION(BlueprintImplementableEvent, Category = "weapon", meta=(DisplayName="OnBulletHit"))
 	void BP_OnBulletHit(const FHitResult& hitResult);
+
+	void UpdateAmmo();
+	FORCEINLINE FName GetMuzzleSocketName() const { return MuzzleSocketName; }
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "weapon")
 	int ammoInClip = 7;
@@ -29,8 +32,7 @@ private:
 	FName MuzzleSocketName;
 	UPROPERTY(EditDefaultsOnly, Category = "weapon")
 	float shootRange = 10000.f;
-	UPROPERTY(EditDefaultsOnly, Category = "weapon")
-	float damage = 10.f;
+
 	virtual void AttackPointAnimNotify() override;
 
 	virtual void Reload() override;
@@ -41,4 +43,5 @@ private:
 	void ReloadTimePoint();
 	virtual void PutInInventory() override;
 	virtual bool GetAmmoStatus(int& clipAmmo, int& inventoryAmmo) const override;
+
 };

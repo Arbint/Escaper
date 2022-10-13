@@ -62,6 +62,9 @@ protected:
 	UAnimMontage* ReloadMontage;
 
 	virtual bool CanAttack() const;
+
+	float GetWeaponDamage() const { return damage; }
+
 private:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Weapon")
 	class USceneComponent* RootComp;
@@ -95,6 +98,8 @@ private:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "weapon")
 	float firingRate = 1.f;
-
 	FTimerHandle FiringTimmer;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	float damage = 10.f;
 };
