@@ -19,6 +19,8 @@ class THEESCAPER_API AWeaponPickup : public ATriggerable
 public:
 	AWeaponPickup();
 
+	void SetRandomWeapon();
+
 	UPROPERTY(EditAnywhere, Category = "Weapon")
 	TSubclassOf<class AWeapon> WeaponClass;
 
@@ -29,6 +31,10 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Weapon")
 	class UStaticMeshComponent* MeshComp;
+
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	TArray<TSubclassOf<AWeapon>> weaponClasses;
 
 #if WITH_EDITOR
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
