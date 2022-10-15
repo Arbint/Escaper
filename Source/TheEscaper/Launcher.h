@@ -16,7 +16,7 @@ class THEESCAPER_API ALauncher : public AGun
 public:
 	ALauncher();
 
-	UPROPERTY(BlueprintReadWrite, Category = "Projectile")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Projectile")
 	UStaticMeshComponent* grenadeMesh;
 
 private:

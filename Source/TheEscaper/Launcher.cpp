@@ -19,9 +19,6 @@ void ALauncher::AttackPointAnimNotify()
 	projectile->SetInitialSpeed(projectileInitialSpeed);
 	projectile->SetMaxSpeed(projectileMaxSpeed);
 	projectile->SetDamage(GetWeaponDamage());
-	//this won't trigger the OnHit event..not sure why. Too fast? Simulate Physics?
-	//projectile->GetMesh()->SetSimulatePhysics(true);
-	//projectile->GetMesh()->AddImpulse(projectile->GetActorForwardVector() * projectileRange, NAME_None, false);
 	projectile->SetOwner(this);
 	UpdateAmmo();
 }
