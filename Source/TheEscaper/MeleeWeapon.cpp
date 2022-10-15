@@ -8,15 +8,20 @@
 void AMeleeWeapon::AttackPointAnimNotify()
 {
 	Super::AttackPointAnimNotify();
-	FHitResult result;
 	FVector ownerViewLocation;
 	FRotator ownerViewRot;
 	FCollisionShape capsule = FCollisionShape::MakeCapsule(40, 80);
 
 	GetOwner()->GetActorEyesViewPoint(ownerViewLocation, ownerViewRot);
-
-	if (GetWorld()->SweepSingleByChannel(result, ownerViewLocation, ownerViewLocation + ownerViewRot.Vector() * meleeRange, FQuat::Identity, ECC_Camera, capsule))
+	TArray<FHitResult> results;
+	if (GetWorld()->SweepMultiByChannel(results, ownerViewLocation, ownerViewLocation + ownerViewRot.Vector() * meleeRange, FQuat::Identity, ECC_Camera, capsule))
 	{
-		UGameplayStatics::ApplyDamage(result.GetActor(), GetWeaponDamage(), nullptr, GetOwner(), nullptr);
+		for (const FHitResult& result : results)
+		{
+			if (result.GetActor() != GetOwner())
+			{
+				UGameplayStatics::ApplyDamage(result.GetActor(), GetWeaponDamage(), nullptr, GetOwner(), nullptr);
+			}
+		}
 	}
 }
