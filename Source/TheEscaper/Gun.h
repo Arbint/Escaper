@@ -42,6 +42,7 @@ private:
 
 	void ReloadTimePoint();
 	virtual void PutInInventory() override;
+	virtual void PutInHand() override;
 	virtual bool GetAmmoStatus(int& clipAmmo, int& inventoryAmmo) const override;
-
+	virtual void ReplenishAmmo(int amt) override;
 };

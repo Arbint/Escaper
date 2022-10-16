@@ -13,5 +13,7 @@ UCLASS()
 class THEESCAPER_API AEGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
-	
+public:
+	void RestartCurrentLevel();
+	void QuitGame(class APlayerController* pc);
 };

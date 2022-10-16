@@ -17,6 +17,7 @@ class THEESCAPER_API AEPlayerController : public APlayerController
 public:
 	AEPlayerController();
 	virtual void OnPossess(APawn* newPawn) override;
+	virtual void SetupInputComponent() override;
 
 	void Caught();
 
@@ -30,8 +31,13 @@ private:
 	UFUNCTION()
 	void PawnDead();
 
+	UFUNCTION()
+	void PawnDeathFinished(AActor* DestroiedPawn);
+
 	UInGameUI* inGameUI;
 	FTimerHandle CaughtTimerHandle;
 	void CaughtFinished();
 	bool bIsCaught;
+
+	void TogglePause();
 };

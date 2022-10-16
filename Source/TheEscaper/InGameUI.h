@@ -16,14 +16,16 @@ class THEESCAPER_API UInGameUI : public UUserWidget
 public:
 	UFUNCTION()
 	void UpdateHealth(float health, float delta, float maxHealth);
+	
+	UFUNCTION()
+	void NewWeaponAquired(class AWeapon* newWeapon);
 
 	UFUNCTION()
-	void NewWeaponGiven(class AWeapon* weapon);
+	void WeaponSwitchedTo(class AWeapon* weapon);
 
-	UFUNCTION()
-	void WeaponSwitched(class AWeapon* weapon);
-
-	void SwitchToGameOverMenu();
+	void ShowGameOverScreen();
+	void TooglePause();
+	virtual void NativeConstruct() override;
 
 private:
 	UPROPERTY(meta = (BindWidget))
@@ -33,5 +35,39 @@ private:
 	class UImage* crossHair;
 
 	UPROPERTY(meta = (BindWidget))
-	class UListView* weaponList;
+	class UListView* WeaponList;
+
+	UPROPERTY(meta = (BindWidget))
+	class UWidgetSwitcher* UISwicher;
+
+	UPROPERTY(meta = (BindWidget))
+	class UCanvasPanel* GameOverRoot;
+	
+	UPROPERTY(meta = (BindWidget))
+	class UCanvasPanel* GameplayUIRoot;
+
+	UPROPERTY(meta = (BindWidget))
+	class UCanvasPanel* PauseUIRoot;
+
+	UPROPERTY(meta = (BindWidget))
+	class UCanvasPanel* menuBtnRoot;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* RestartBtn;
+	UPROPERTY(meta = (BindWidget))
+	class UButton* QuitBtn;
+	UPROPERTY(meta = (BindWidget))
+	class UButton* ResumeBtn;
+
+
+	UFUNCTION()
+		void Resume();
+	UFUNCTION()
+		void ReStart();
+	UFUNCTION()
+		void Quit();
+
+	void ParentMenuPanelTo(UCanvasPanel* newParent);
+
+	class AEGameMode* gameMode;
 };

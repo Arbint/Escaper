@@ -56,6 +56,10 @@ void AWeapon::OnAquired(class USkeletalMeshComponent* OwnerMesh)
 		WalkAnim = WalkAnimMap[mesh];
 }
 
+void AWeapon::ReplenishAmmo(int amt)
+{
+}
+
 void AWeapon::Attack()
 {
 	if (CanAttack())
@@ -72,11 +76,13 @@ void AWeapon::Reload()
 void AWeapon::PutInInventory()
 {
 	SetActorHiddenInGame(true);
+	bIsActiveWeapon = false;
 }
 
 void AWeapon::PutInHand()
 {
 	SetActorHiddenInGame(false);
+	bIsActiveWeapon = true;
 }
 
 void AWeapon::GetAnims(UAnimSequence*& Idle, UAnimSequence*& Walk, UAnimMontage*& Attack) const

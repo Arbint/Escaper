@@ -32,19 +32,26 @@ void AECharacterBase::Tick(float DeltaTime)
 
 void AECharacterBase::GiveWeapon(TSubclassOf<AWeapon> weaponClass)
 {
-	if (HasWeaponOfType(weaponClass))
+	AWeapon* findWeapon = HasWeaponOfType(weaponClass);
+	if (findWeapon)
 	{
-		//TODO: maybe add ammo here
-		return;
+		int clipAmmo, InventoryAmmo;
+		if (weaponClass.GetDefaultObject()->GetAmmoStatus(clipAmmo, InventoryAmmo))
+		{
+			findWeapon->ReplenishAmmo(clipAmmo+InventoryAmmo);
+		}
 	}
-	AWeapon* newWeapon = GetWorld()->SpawnActor<AWeapon>(weaponClass);
-	newWeapon->SetOwner(this);
-	newWeapon->OnAquired(GetMesh());
-	weapons.Add(newWeapon);
-	OnWeaponGiven.Broadcast(newWeapon);
-	if (currentWeapon == nullptr)
+	else
 	{
-		EquipWeapon(weapons.Num() - 1);
+		AWeapon* newWeapon = GetWorld()->SpawnActor<AWeapon>(weaponClass);
+		newWeapon->SetOwner(this);
+		newWeapon->OnAquired(GetMesh());
+		weapons.Add(newWeapon);
+		OnWeaponGiven.Broadcast(newWeapon);
+		if (currentWeapon == nullptr)
+		{
+			EquipWeapon(weapons.Num() - 1);
+		}
 	}
 }
 
@@ -96,16 +103,16 @@ void AECharacterBase::Reload()
 	}
 }
 
-bool AECharacterBase::HasWeaponOfType(TSubclassOf<AWeapon> weaponClass) const
+AWeapon* AECharacterBase::HasWeaponOfType(TSubclassOf<AWeapon> weaponClass) const
 {
 	for (AWeapon* weapon : weapons)
 	{
 		if (weapon->GetClass() == weaponClass)
 		{
-			return true;
+			return weapon;
 		}
 	}
-	return false;
+	return nullptr;
 }
 
 void AECharacterBase::EquipWeapon(int index)

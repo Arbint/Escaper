@@ -54,11 +54,30 @@ void AGun::PutInInventory()
 	GetWorldTimerManager().ClearTimer(ReloadTimmerHandle);
 }
 
+void AGun::PutInHand()
+{
+	Super::PutInHand();
+	if (ammoInClip <= 0 && ammoInInventory >= 0 && IsActiveWeapon())
+	{
+		Reload();
+	}
+}
+
 bool AGun::GetAmmoStatus(int& clipAmmo, int& inventoryAmmo) const
 {
 	clipAmmo = ammoInClip;
 	inventoryAmmo = ammoInInventory;
 	return true;
+}
+
+void AGun::ReplenishAmmo(int amt)
+{
+	ammoInInventory += amt;
+	OnAmmoUpdated.Broadcast(ammoInClip, ammoInInventory);
+	if (ammoInClip <= 0 && ammoInInventory >= 0 && IsActiveWeapon())
+	{
+		Reload();
+	}
 }
 
 void AGun::UpdateAmmo()

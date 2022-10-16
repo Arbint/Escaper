@@ -31,7 +31,6 @@ protected:
 public:	
 	FOnWeaponGiven OnWeaponGiven;
 	FOnWeaponSwitched OnWeaponSwitched;
-
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -70,7 +69,7 @@ private:
 
 	int weaponIndex = -1;
 
-	bool HasWeaponOfType(TSubclassOf<AWeapon> weaponClass) const;
+	class AWeapon* HasWeaponOfType(TSubclassOf<AWeapon> weaponClass) const;
 
 	void EquipWeapon(int index);
 

@@ -26,6 +26,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	virtual void OnAquired(class USkeletalMeshComponent* OwnerMesh);
+	virtual void ReplenishAmmo(int amt);
 
 	virtual void Attack();
 	virtual void Reload();
@@ -46,6 +47,7 @@ public:
 	FORCEINLINE UTexture2D* GetWeaponIcon() const { return weaponIconTexture; }
 
 	FORCEINLINE UStaticMesh* GetMesh() const { return WeaponMesh->GetStaticMesh(); }
+	FORCEINLINE bool IsActiveWeapon() const { return bIsActiveWeapon; }
 
 	/*
 	@ return - false if not firearm
@@ -102,4 +104,6 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 	float damage = 10.f;
+
+	bool bIsActiveWeapon;
 };
