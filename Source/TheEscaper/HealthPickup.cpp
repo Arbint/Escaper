@@ -12,8 +12,11 @@ AHealthPickup::AHealthPickup()
 
 void AHealthPickup::OnTriggered(AActor* actor)
 {
-	UGameplayStatics::ApplyDamage(actor, healAmount * -1, nullptr, this, nullptr);
-	Destroy();
+	if (actor == UGameplayStatics::GetPlayerController(this, 0)->GetPawn())
+	{
+		UGameplayStatics::ApplyDamage(actor, healAmount * -1, nullptr, this, nullptr);
+		Destroy();
+	}
 }
 
 void AHealthPickup::OnActorLeftTrigger(AActor* actor)

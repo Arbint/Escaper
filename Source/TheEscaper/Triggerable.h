@@ -18,7 +18,8 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
+	UFUNCTION(BlueprintImplementableEvent, Category = "Trigger", Meta = (DisplayName = "OnTriggered"))
+	void BP_OnTriggered(AActor* actor);
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -39,4 +40,6 @@ private:
 
 	virtual void OnTriggered(AActor* actor);
 	virtual void OnActorLeftTrigger(AActor* actor);
+
+
 };

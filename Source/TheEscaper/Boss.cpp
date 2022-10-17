@@ -6,6 +6,10 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "EAIControllerBase.h"
 #include "Projectile.h"
+#include "HealthComponent.h"
+#include "Components/WidgetComponent.h"
+#include "ValueGauge.h"
+#include "EEnemy.h"
 // Sets default values
 ABoss::ABoss()
 {
@@ -15,17 +19,37 @@ ABoss::ABoss()
 	RotationPivot = CreateDefaultSubobject<USceneComponent>("RotationPivot");
 	RotationPivot->SetupAttachment(RootComp);
 	
+	EnemySpawnPoint = CreateDefaultSubobject<USceneComponent>("EnemySpawnPoint");
+	EnemySpawnPoint->SetupAttachment(RotationPivot);
+
 	Muzzle = CreateDefaultSubobject<USceneComponent>("Muzzle");
 	Muzzle->SetupAttachment(RotationPivot);
 
 	WheelPivot = CreateDefaultSubobject<USceneComponent>("WheelPivot");
 	WheelPivot->SetupAttachment(RotationPivot);
+
+	HealthComp = CreateDefaultSubobject<UHealthComponent>("HealthComp");
+	HealthBarWidgetComp = CreateDefaultSubobject<UWidgetComponent>("HealthBarWidgetComponent");
+	HealthBarWidgetComp->SetupAttachment(RootComp);
+
+	HealthComp->OnHealthChanged.AddDynamic(this, &ABoss::HealthUpdated);
+	HealthComp->OnHealthEmpty.AddDynamic(this, &ABoss::Die);
 }
 
-bool ABoss::LookAt(AActor* Target, float DeltaTime)
+void ABoss::SpawnEnemy()
+{
+	if (Target && EnemeyClass)
+	{
+		FActorSpawnParameters spawnParams;
+		spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+		GetWorld()->SpawnActor<AEEnemy>(EnemeyClass, EnemySpawnPoint->GetComponentTransform(), spawnParams);
+	}
+}
+
+bool ABoss::LookAt(AActor* lookTarget, float DeltaTime)
 {
 	FRotator currentRot = RotationPivot->GetComponentRotation();
-	FRotator lookRot = UKismetMathLibrary::FindLookAtRotation(RotationPivot->GetComponentLocation(), Target->GetActorLocation());
+	FRotator lookRot = UKismetMathLibrary::FindLookAtRotation(RotationPivot->GetComponentLocation(), lookTarget->GetActorLocation());
 
 	if (currentRot.Equals(lookRot, 1)) 
 		return true;
@@ -39,6 +63,7 @@ void ABoss::BeginPlay()
 {
 	Super::BeginPlay();
 	RandomRotationSpeed();
+	healthBarWidget = Cast<UValueGauge>(HealthBarWidgetComp->GetUserWidgetObject());
 }
 
 // Called every frame
@@ -79,8 +104,22 @@ void ABoss::PossessedBy(AController* NewController)
 	}
 }
 
-void ABoss::TargetUpdated(AActor* Target)
+void ABoss::TargetUpdated(AActor* newTarget)
 {
+	Target = newTarget;
 	BP_TargetUpdated(Target);
+}
+
+void ABoss::HealthUpdated(float newHealth, float Delta, float MaxHealth)
+{
+	if (healthBarWidget)
+	{
+		healthBarWidget->SetValue(newHealth, Delta, MaxHealth);
+	}
+}
+
+void ABoss::Die()
+{
+	//TODO: GO WITH EXPLOSION
 }
 
