@@ -34,6 +34,9 @@ public:
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Health")
+	bool bFriendlyFire = false;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Health")
 	float health = 100.f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "MaxHealth")

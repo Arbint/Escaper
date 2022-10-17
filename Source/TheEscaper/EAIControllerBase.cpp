@@ -6,6 +6,7 @@
 #include "Perception/AISenseConfig_Sight.h"
 #include "Perception/AISenseConfig_Damage.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 AEAIControllerBase::AEAIControllerBase()
 {
@@ -23,6 +24,7 @@ void AEAIControllerBase::BeginPlay()
 {
 	Super::BeginPlay();
 	RunBehaviorTree(BehaviorTree);
+	GetBlackboardComponent()->SetValueAsObject(PlayerBlackboardKeyName, UGameplayStatics::GetPlayerController(this, 0)->GetPawn());
 }
 
 void AEAIControllerBase::OnPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
@@ -42,4 +44,14 @@ void AEAIControllerBase::OnPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus
 			OnTargetUpdated.Broadcast(nullptr);
 		}
 	}
+}
+
+FGenericTeamId AEAIControllerBase::GetGenericTeamId() const
+{
+	IGenericTeamAgentInterface* PawnAsTeamInterface = GetPawn<IGenericTeamAgentInterface>();
+	if (PawnAsTeamInterface)
+	{
+		return PawnAsTeamInterface->GetGenericTeamId();
+	}
+	return FGenericTeamId::NoTeam;
 }

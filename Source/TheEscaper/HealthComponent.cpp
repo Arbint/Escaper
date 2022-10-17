@@ -3,6 +3,7 @@
 
 #include "HealthComponent.h"
 #include "Perception/AISense_Damage.h"
+#include "GenericTeamAgentInterface.h"
 
 // Sets default values for this component's properties
 UHealthComponent::UHealthComponent()
@@ -35,11 +36,18 @@ void UHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 void UHealthComponent::TakenDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
-	if (Damage != 0)
+	if (FGenericTeamId::GetAttitude(GetOwner(), DamageCauser) == ETeamAttitude::Friendly && !bFriendlyFire)
+		return;
+
+	if (Damage == 0)
+		return;
+
+	if (Damage > 0)
 	{
 		UAISense_Damage::ReportDamageEvent(this, GetOwner(), DamageCauser, Damage, GetOwner()->GetActorLocation(), GetOwner()->GetActorLocation());
-		ChangeHealth(-Damage);
 	}
+	
+	ChangeHealth(-Damage);
 }
 
 void UHealthComponent::ChangeHealth(float amt)

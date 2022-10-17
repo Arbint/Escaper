@@ -36,8 +36,13 @@ private:
 	FName TargetBlackboardKeyName;
 
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
+	FName PlayerBlackboardKeyName;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	FName LastSeenLocKeyName;
 
 	UPROPERTY(EditAnywhere, Category = "AI")
 	UBehaviorTree* BehaviorTree;
+
+	virtual FGenericTeamId GetGenericTeamId() const override;
 };
