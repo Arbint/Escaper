@@ -31,14 +31,18 @@ public:
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Projectile")
-		UStaticMeshComponent* projectileMesh;
+	UStaticMeshComponent* projectileMesh;
 
 	UPROPERTY(VisibleAnywhere, Category = "Projectile")
-		class UProjectileMovementComponent* ProjectileMovementComponent;
+	class UProjectileMovementComponent* ProjectileMovementComponent;
 
 	UFUNCTION()
-		void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
-
+	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Projectile")
 	float damage = 80;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Projectile")
+	float damageRadius = 120;
 
 };

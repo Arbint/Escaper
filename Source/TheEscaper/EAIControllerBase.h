@@ -7,6 +7,7 @@
 #include "Perception/AIPerceptionTypes.h"
 #include "EAIControllerBase.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTargetUpdated, AActor*, newTarget);
 /**
  * 
  */
@@ -18,7 +19,7 @@ public:
 	AEAIControllerBase();
 
 	virtual void BeginPlay() override;
-
+	FOnTargetUpdated OnTargetUpdated;
 private:
 	UPROPERTY(VisibleDefaultsOnly, Category = "AI")
 	class UAIPerceptionComponent* PerceptionComp;

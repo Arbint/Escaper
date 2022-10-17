@@ -53,7 +53,8 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 
 	if (OtherActor && OtherActor != this)
 	{
-		UGameplayStatics::ApplyDamage(OtherActor, damage, GetOwner()->GetInstigatorController(), this, UDamageType::StaticClass());
+		TArray<AActor*> igonredActors{GetOwner()};
+		UGameplayStatics::ApplyRadialDamage(this, damage, GetActorLocation(), damageRadius, nullptr, igonredActors, GetOwner());
 	}
 	Destroy();
 }

@@ -19,7 +19,7 @@ void ALauncher::AttackPointAnimNotify()
 	projectile->SetInitialSpeed(projectileInitialSpeed);
 	projectile->SetMaxSpeed(projectileMaxSpeed);
 	projectile->SetDamage(GetWeaponDamage());
-	projectile->SetOwner(this);
+	projectile->SetOwner(GetOwner());
 	UpdateAmmo();
 }
 

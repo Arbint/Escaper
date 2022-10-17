@@ -2,6 +2,7 @@
 
 
 #include "HealthComponent.h"
+#include "Perception/AISense_Damage.h"
 
 // Sets default values for this component's properties
 UHealthComponent::UHealthComponent()
@@ -34,7 +35,11 @@ void UHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 void UHealthComponent::TakenDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
-	ChangeHealth(-Damage);
+	if (Damage != 0)
+	{
+		UAISense_Damage::ReportDamageEvent(this, GetOwner(), DamageCauser, Damage, GetOwner()->GetActorLocation(), GetOwner()->GetActorLocation());
+		ChangeHealth(-Damage);
+	}
 }
 
 void UHealthComponent::ChangeHealth(float amt)

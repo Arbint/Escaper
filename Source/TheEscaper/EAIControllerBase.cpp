@@ -30,6 +30,7 @@ void AEAIControllerBase::OnPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus
 	if (Stimulus.WasSuccessfullySensed())
 	{
 		GetBlackboardComponent()->SetValueAsObject(TargetBlackboardKeyName,Actor);
+		OnTargetUpdated.Broadcast(Actor);
 	}
 	else
 	{
@@ -38,6 +39,7 @@ void AEAIControllerBase::OnPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus
 		{
 			GetBlackboardComponent()->ClearValue(TargetBlackboardKeyName);
 			GetBlackboardComponent()->SetValueAsVector(LastSeenLocKeyName, Actor->GetActorLocation());
+			OnTargetUpdated.Broadcast(nullptr);
 		}
 	}
 }

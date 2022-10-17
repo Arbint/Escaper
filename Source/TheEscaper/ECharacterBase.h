@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "GenericTeamAgentInterface.h"
+#include "AIBehaviorInterface.h"
 #include "ECharacterBase.generated.h"
 
 
@@ -14,7 +15,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWeaponGiven, AWeapon*, weapon);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWeaponSwitched, AWeapon*, weapon);
 
 UCLASS()
-class THEESCAPER_API AECharacterBase : public ACharacter, public IGenericTeamAgentInterface
+class THEESCAPER_API AECharacterBase : public ACharacter, public IGenericTeamAgentInterface, public IAIBehaviorInterface
 {
 	GENERATED_BODY()
 
