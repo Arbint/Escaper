@@ -18,6 +18,15 @@ AECharacterBase::AECharacterBase()
 	healthComp->OnHealthEmpty.AddDynamic(this, &AECharacterBase::StartDeathSequence);
 }
 
+void AECharacterBase::SetActorHiddenInGame(bool bNewHidden)
+{
+	Super::SetActorHiddenInGame(bNewHidden);
+	if (currentWeapon)
+	{
+		currentWeapon->SetActorHiddenInGame(bNewHidden);
+	}
+}
+
 // Called when the game starts or when spawned
 void AECharacterBase::BeginPlay()
 {

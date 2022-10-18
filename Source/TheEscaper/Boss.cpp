@@ -10,6 +10,8 @@
 #include "Components/WidgetComponent.h"
 #include "ValueGauge.h"
 #include "EEnemy.h"
+#include "AIController.h"
+#include "BrainComponent.h"
 // Sets default values
 ABoss::ABoss()
 {
@@ -120,6 +122,17 @@ void ABoss::HealthUpdated(float newHealth, float Delta, float MaxHealth)
 
 void ABoss::Die()
 {
-	//TODO: GO WITH EXPLOSION
+	FActorSpawnParameters spawnParams;
+	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+	FRotator SpawnRot = RotationPivot->GetComponentRotation();
+	UE_LOG(LogTemp, Warning, TEXT("Spawn rotation is: %s"), *SpawnRot.ToString())
+	GetWorld()->SpawnActor<AActor>(DeadActorClass, GetActorLocation(), SpawnRot,spawnParams);
+
+	AAIController* AIC = GetController<AAIController>();
+	if (AIC)
+	{
+		AIC->GetBrainComponent()->StopLogic("Dead");
+	}
+	Destroy();
 }
 

@@ -24,7 +24,7 @@ public:
 	AECharacterBase();
 	/** Retrieve team identifier in form of FGenericTeamId */
 	virtual FGenericTeamId GetGenericTeamId() const override {return TeamID;}
-
+	virtual void SetActorHiddenInGame(bool bNewHidden) override;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

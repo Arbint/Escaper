@@ -91,5 +91,8 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Boss")
 	TSubclassOf<class AEEnemy> EnemeyClass;
 
+	UPROPERTY(EditAnywhere, Category = "Boss")
+	TSubclassOf<AActor> DeadActorClass;
+
 	AActor* Target;
 };
