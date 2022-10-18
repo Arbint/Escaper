@@ -6,7 +6,7 @@
 #include "LevelSequence/Public/LevelSequenceActor.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/Character.h"
-#include "GameFramework/PlayerController.h"
+#include "EPlayerController.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/HUD.h"
 void ACinematicTrigger::OnTriggered(AActor* actor)
@@ -19,11 +19,12 @@ void ACinematicTrigger::OnTriggered(AActor* actor)
 	playSettings.bDisableLookAtInput = true;
 	playSettings.bHideHud = true;
 	APlayerController* pc = UGameplayStatics::GetPlayerController(this, 0);
-	ACharacter* playerCharacter = pc->GetCharacter();
-	if (pc && playerCharacter)
+	AEPlayerController* epc = Cast<AEPlayerController>(pc);
+	ACharacter* playerCharacter = epc->GetCharacter();
+	if (epc && playerCharacter)
 	{
 		playerCharacter->DisableInput(pc);
-		pc->GetHUD()->SetActorHiddenInGame(true);
+		epc->SetHideUI(true);
 	}
 	
 	ALevelSequenceActor* LevelSequenceActor;
@@ -41,9 +42,10 @@ void ACinematicTrigger::Finished()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Cinematic Ended"))
 	APlayerController* pc = UGameplayStatics::GetPlayerController(this, 0);
-	if (pc)
+	AEPlayerController* epc = Cast<AEPlayerController>(pc);
+	if (epc)
 	{
 		UGameplayStatics::GetPlayerCharacter(this, 0)->EnableInput(pc);
-		pc->GetHUD()->SetActorHiddenInGame(false);
+		epc->SetHideUI(false);
 	}
 }

@@ -82,3 +82,18 @@ void AEPlayerController::Caught()
 	GetWorldTimerManager().SetTimer(CaughtTimerHandle, this, &AEPlayerController::CaughtFinished, caugthAnimationDuration, false);
 }
 
+void AEPlayerController::SetHideUI(bool bHide)
+{
+	if (inGameUI)
+	{
+		if (bHide)
+		{
+			inGameUI->SetVisibility(ESlateVisibility::Hidden);
+		}
+		else
+		{
+			inGameUI->SetVisibility(ESlateVisibility::Visible);
+		}
+	}
+}
+

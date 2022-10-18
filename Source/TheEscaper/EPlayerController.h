@@ -21,6 +21,8 @@ public:
 
 	void Caught();
 
+	void SetHideUI(bool bHide);
+
 private:
 	class APlayerCharacter* playerCharacter;
 	UPROPERTY(EditDefaultsOnly, Category = "Player")
