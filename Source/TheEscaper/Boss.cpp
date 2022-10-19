@@ -10,12 +10,18 @@
 #include "Components/WidgetComponent.h"
 #include "ValueGauge.h"
 #include "EEnemy.h"
+#include "LazerGunComponent.h"
+#include "BrainComponent.h"
+#include "CinematicComponent.h"
 // Sets default values
 ABoss::ABoss()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	
 	RootComp = CreateDefaultSubobject<USceneComponent>("RootComp");
+	SetRootComponent(RootComp);
+	
 	RotationPivot = CreateDefaultSubobject<USceneComponent>("RotationPivot");
 	RotationPivot->SetupAttachment(RootComp);
 	
@@ -34,7 +40,16 @@ ABoss::ABoss()
 
 	HealthComp->OnHealthChanged.AddDynamic(this, &ABoss::HealthUpdated);
 	HealthComp->OnHealthEmpty.AddDynamic(this, &ABoss::Die);
+
+	LazerGun = CreateDefaultSubobject<ULazerGunComponent>("LazerGun");
+	LazerGun->SetupAttachment(Muzzle);
+
+	CinematicComp = CreateDefaultSubobject<UCinematicComponent>("CinematicComp");
+	CinematicComp->OnCinematicStarted.AddDynamic(this, &ABoss::CinematicStarted);
+	CinematicComp->OnCinematicEnded.AddDynamic(this, &ABoss::CinematicEnded);
+	CinematicComp->SetupAttachment(RootComp);
 }
+
 
 void ABoss::SpawnEnemy()
 {
@@ -86,6 +101,11 @@ void ABoss::Attack()
 	GetWorldTimerManager().SetTimer(ProjectileAttackTimerHandle, ProjectileCoolDown, false);
 }
 
+void ABoss::Triggered(AActor* TriggeringActor)
+{
+	SetBehaviorEnabled(true);
+}
+
 void ABoss::RandomRotationSpeed()
 {
 	WheelRotationSpeed = FMath::RandRange(RotationSpeedRange.X, RotationSpeedRange.Y);
@@ -123,3 +143,34 @@ void ABoss::Die()
 	//TODO: GO WITH EXPLOSION
 }
 
+void ABoss::SetBehaviorEnabled(bool Enabled)
+{
+	AAIController* AIC = GetController<AAIController>();
+	UBrainComponent* BrainComp = nullptr;
+	if (AIC)
+	{
+		BrainComp = AIC->GetBrainComponent();
+	}
+
+	if (BrainComp)
+	{
+		if (Enabled)
+		{
+			BrainComp->StartLogic();
+		}
+		else
+		{
+			BrainComp->StopLogic("Gameplay");
+		}
+	}
+}
+
+void ABoss::CinematicStarted()
+{
+	SetBehaviorEnabled(false);
+}
+
+void ABoss::CinematicEnded()
+{
+	SetBehaviorEnabled(true);
+}

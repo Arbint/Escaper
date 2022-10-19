@@ -6,10 +6,11 @@
 #include "GameFramework/Pawn.h"
 #include "AIBehaviorInterface.h"
 #include "GenericTeamAgentInterface.h"
+#include "TriggerableInterface.h"
 #include "Boss.generated.h"
 
 UCLASS()
-class THEESCAPER_API ABoss : public APawn, public IAIBehaviorInterface, public IGenericTeamAgentInterface
+class THEESCAPER_API ABoss : public APawn, public IAIBehaviorInterface, public IGenericTeamAgentInterface, public ITriggerableInterface
 {
 	GENERATED_BODY()
 
@@ -31,6 +32,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	virtual void Attack() override;
+	virtual void Triggered(AActor* TriggeringActor) override;
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Boss")
 	class USceneComponent* RootComp;
@@ -52,6 +54,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	class UWidgetComponent* HealthBarWidgetComp;
+
+	UPROPERTY(EditAnywhere, Category = "Boss")
+	class UCinematicComponent* CinematicComp;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Boss")
 	FVector2D RotationSpeedRange {10, -10};
@@ -92,4 +97,15 @@ private:
 	TSubclassOf<class AEEnemy> EnemeyClass;
 
 	AActor* Target;
+
+	UPROPERTY(VisibleAnywhere, Category = "Boss")
+	class ULazerGunComponent* LazerGun;
+
+	void SetBehaviorEnabled(bool Enabled);
+
+	UFUNCTION()
+	void CinematicStarted();
+
+	UFUNCTION()
+	void CinematicEnded();
 };

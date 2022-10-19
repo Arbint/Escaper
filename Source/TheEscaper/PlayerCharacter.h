@@ -39,5 +39,13 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "player")
 	UAnimMontage* CaughtMontage;
 
+	UPROPERTY(EditDefaultsOnly, Category = "player")
+	FName LazerSocketName = "LazerGunSocket";
 
+	UPROPERTY(VisibleDefaultsOnly, Category = "player")
+	class ULazerGunComponent* LazerGun;
+
+	void LazerOn();
+
+	void LazerOff();
 };

@@ -32,6 +32,11 @@ private:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Trigger")
 	UBoxComponent* TriggerComp;
 
+	UPROPERTY(EditAnywhere, Category = "Trigger")
+	bool triggerOnce = false;
+
+	bool triggered = false;
+
 	UFUNCTION()
 	void Overlapped(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
@@ -40,6 +45,4 @@ private:
 
 	virtual void OnTriggered(AActor* actor);
 	virtual void OnActorLeftTrigger(AActor* actor);
-
-
 };

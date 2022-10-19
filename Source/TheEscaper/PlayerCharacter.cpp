@@ -4,11 +4,14 @@
 #include "PlayerCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "LazerGunComponent.h"
 APlayerCharacter::APlayerCharacter()
 {
 	playerEye = CreateDefaultSubobject<UCameraComponent>("playerEye");
 	playerEye->SetupAttachment(GetRootComponent());
 	playerEye->bUsePawnControlRotation = true;
+	LazerGun = CreateDefaultSubobject<ULazerGunComponent>("LazerGun");
+	LazerGun->SetupAttachment(GetMesh(), LazerSocketName);
 }
 
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -23,6 +26,8 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAction("nextWeapon", IE_Pressed, this, &APlayerCharacter::NextWeapon);
 	PlayerInputComponent->BindAction("prevWeapon", IE_Pressed, this, &APlayerCharacter::PrevWeapon);
 	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &APlayerCharacter::Reload);
+	PlayerInputComponent->BindAction("Lazer", IE_Pressed, this, &APlayerCharacter::LazerOn);
+	PlayerInputComponent->BindAction("Lazer", IE_Released, this, &APlayerCharacter::LazerOff);
 }
 
 void APlayerCharacter::BeginPlay()
@@ -49,6 +54,16 @@ void APlayerCharacter::Turn(float amt)
 void APlayerCharacter::LookUp(float amt)
 {
 	AddControllerPitchInput(amt);
+}
+
+void APlayerCharacter::LazerOn()
+{
+	LazerGun->LazerOn();
+}
+
+void APlayerCharacter::LazerOff()
+{
+	LazerGun->LazerOff();
 }
 
 float APlayerCharacter::Caught()
